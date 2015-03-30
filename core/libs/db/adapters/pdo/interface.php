@@ -33,60 +33,36 @@ interface DbPdoInterface
 {
     public function initialize();
 
-    /**
-     * @return bool
-     */
     public function connect($config);
 
     public function query($sql);
 
-    /**
-     * @return integer
-     */
     public function exec($sql);
 
-    public function fetch_array($resultQuery=NULL, $opt='');
+    public function fetch_array($resultQuery='', $opt='');
 
-    /**
-     * @return bool
-     */
     public function close();
 
     /**
      * Este metodo no esta soportado por PDO, usar fetch_all y luego contar con count()
      *
      * @param resource $result_query
-     * @return integer
      */
-    public function num_rows($result_query=NULL);
+    public function num_rows($resultQuery='');
 
-    /**
-     * @param resource $resultQuery
-     * @return string
-     */
-    public function field_name($number, $resultQuery=NULL);
+    public function field_name($number, $resultQuery='');
 
     /**
      * Este metodo no esta soportado por PDO, usar fetch_all y luego contar con count()
      *
      * @param resource $result_query
-     * @return boolean
      */
-    public function data_seek($number, $result_query=NULL);
+    public function data_seek($number, $resultQuery='');
 
-    /**
-     * @return integer
-     */
-    public function affected_rows($result_query=NULL);
+    public function affected_rows($result_query='');
 
-    /**
-     * @return string
-     */
     public function error($err='');
 
-    /**
-     * @return integer
-     */
     public function no_error($number=0);
 
     public function in_query($sql);
@@ -101,23 +77,10 @@ interface DbPdoInterface
 
     public function last_insert_id($name='');
 
-    /**
-     * @return integer
-     */
     public function insert($table, $values, $pk='');
 
-    /**
-     * @param string $where_condition
-     *
-     * @return integer
-     */
     public function update($table, $fields, $values, $where_condition=null);
 
-    /**
-     * @param string $where_condition
-     *
-     * @return integer
-     */
     public function delete($table, $where_condition);
 
     public function limit($sql);

@@ -118,7 +118,7 @@ class NixfileCache extends Cache
      *
      * @param string $id
      * @param string $group
-     * @return bool
+     * @return string
      */
     public function remove($id, $group = 'default')
     {

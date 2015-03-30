@@ -29,34 +29,22 @@
  */
 interface DbBaseInterface
 {
-    /**
-     * @return bool
-     */
     public function connect($config);
 
-    /**
-     * @return resource
-     */
     public function query($sql);
 
-    public function fetch_array($resultQuery = NULL, $opt = '');
+    public function fetch_array($resultQuery = '', $opt = '');
 
     public function close();
 
-    public function num_rows($resultQuery = NULL);
+    public function num_rows($resultQuery = '');
 
-    public function field_name($number, $resultQuery = NULL);
+    public function field_name($number, $resultQuery = '');
 
-    /**
-     * @return bool
-     */
-    public function data_seek($number, $resultQuery = NULL);
+    public function data_seek($number, $resultQuery = '');
 
-    public function affected_rows($result_query = NULL);
+    public function affected_rows($result_query = '');
 
-    /**
-     * @return string
-     */
     public function error($err = '');
 
     public function no_error();
@@ -71,26 +59,12 @@ interface DbBaseInterface
 
     public function fetch_all($sql);
 
-    /**
-     * @return bool
-     */
     public function insert($table, $values, $pk = '');
 
-    /**
-     * @param string $where_condition
-     *
-     * @return bool
-     */
     public function update($table, $fields, $values, $where_condition = null);
 
-    /**
-     * @param string $where_condition
-     */
     public function delete($table, $where_condition);
 
-    /**
-     * @return string
-     */
     public function limit($sql);
 
     public function begin();

@@ -19,171 +19,197 @@
  * @copyright  Copyright (c) 2005-2015 Kumbia Team (http://www.kumbiaphp.com)
  * @license    http://wiki.kumbiaphp.com/Licencia     New BSD License
  */
-require dirname(__FILE__).'/validations.php';
 class Validate
 {
-    /**
-     * Objeto a validar
-     * @var Object
-     */
-    protected $obj = null;
-
-    /**
-     * Mensajes de error almacenados
-     * @var array
-     */
-    protected $messages = array();
-
-    /**
-     * Reglas a a seguir para la validación
-     * @var array
-     */
-    protected $rules = array();
 	/**
-	 * Contructor
-	 * @param Object $obj Objeto a validar
+	 * Constantes para definir los patrones
 	 */
 
-	/**
-	 * Almacena si la variable a validar es un objeto antes de convertirlo
-	 * @var boolean
+	/*
+	 * El valor deber ser solo letras y números
 	 */
-	protected $is_obj = false;
+	const IS_ALPHANUM = '/^[\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+$/mu';
+
+
 
     /**
-     * El parametro $rules debe contener esta forma
-     *  array(
-     *   'user' => //este es el nombre del campo
-     *      array(
-     *          'alpha' =>  //nombre del filtro
-     *          null, //parametros pasados (en array o null si no se requiere)
-     *          'lenght' => array('min'=>4, 'max'=>10)
-     *      )
-     * )
-     * @param mixed $obj Objecto o Array a validar
-     * @param array $rules Aray de reglas a validar
+     * Almacena el mensaje de error
+     *
+     * @var String
      */
-    public function __construct($obj, Array $rules){
-    	$this->is_obj = is_object($obj);
-    	$this->obj = (object)$obj;
-    	$this->rules = $rules;
-    }
-
+    public static $error = NULL;
     /**
-     * Ejecuta las validaciones
-     * @return bool Devuelve true si todo es válido
+     * Almacena la Expresion Regular
+     *
+     * @var String
      */
-    public function exec(){
-    	/*Recorrido por todos los campos*/
-    	foreach ($this->rules as $field => $fRule){
-    		$value = self::getValue($this->obj, $field);
-    		/*Regla individual para cada campo*/
-    		foreach ($fRule as $ruleName => $param) {
-                $ruleName = self::getRuleName($ruleName, $param);
-    			$param =  self::getParams($param);
-    			/*Es una validación de modelo*/
-    			if($ruleName[0] == '@'){
-                    $this->modelRule($ruleName, $param, $field);
-    			}elseif(!Validations::$ruleName($value, $param, $this->obj)){
-    				$this->addError($param, $field, $ruleName);
-    			}
-    		}
-    	}
-    	/*Si no hay errores devuelve true*/
-    	return empty($this->messages);
-    }
-
+    public static $regex = NULL;
     /**
-     * Ejecuta una validación de modelo
-     * @param string $rule nombre de la regla
-     * @param array $param
-     * @param string $field Nombre del campo
+     * Valida que int
+     *
+     * @param int $check
      * @return bool
      */
-    protected function modelRule($rule, $param, $field){
-        if(!$this->is_obj){
-            trigger_error('No se puede ejecutar una validacion de modelo en un array', E_USER_WARNING);
-            return false;
-        }
-        $ruleName = ltrim($rule, '@');
-        $obj = $this->obj;
-        if(!method_exists($obj, $ruleName)){
-            trigger_error('El metodo para la validacion no existe', E_USER_WARNING);
-            return false;
-        }
-        if(!$obj->$ruleName($field, $param)){
-           $this->addError($param, $field, $ruleName);
-        }
-        return true;
+    public static function int($check)
+    {
+        return filter_var($check, FILTER_VALIDATE_INT);
     }
 
     /**
-     * Agrega un nuevo error
-     * @param Array $param parametros
-     * @param string $field Nombre del campo
-     * @param string $rule Nombre de la regla
-     */
-    protected function addError(Array $param, $field, $rule){
-         $this->messages[$field][] = isset($param['error']) ?
-                $param['error']: Validations::getMessage($rule);
-    }
-
-    /**
-     * Devuelve el nombre de la regla
-     * @param string $ruleName
-     * @param mixed $param
-     * @return string
-     */
-    protected static function getRuleName($ruleName, $param){
-         /*Evita tener que colocar un null cuando no se pasan parametros*/
-        return is_integer($ruleName) && is_string($param)?$param:$ruleName;
-    }
-
-    /**
-     * Devuelve los parametros para la regla
-     * @param mixed $param
-     * @return array
-     */
-    protected static function getParams($param){
-        return is_array($param)?$param:array();
-    }
-
-    /**
-     * Devuelve el valor de un campo
-     * @param object $obj
-     * @param string $field
-     * @return mixed
-     */
-    protected static function getValue($obj, $field){
-        return !empty($obj->$field)?$obj->$field:null;//obtengo el valor del campo
-    }
-
-    /**
-     * Devuelve los mensajes de error
+     * Valida que una cadena este entre un rango.
+     * Los espacios son contados
+     * Retorna true si el string $value se encuentra entre min and max
      *
+     * @param string $value
+     * @param int $min
+     * @param int $max
+     * @return bool
      */
-    public function getMessages(){
-        return $this->messages;
+    public static function maxLength($value, $max, $min = null)
+    {
+        $length = strlen($value);
+        if($min and $length < $min){
+			return false;
+		}
+        return ($length <= $max);
     }
 
     /**
-     * Version de instancias para flush error
+     * Valida que es un número se encuentre
+     * en un rango minímo y máximo
+     *
+     * @param int $value
+     * @param int $min
+     * @param int $max
      */
-    public function flash(){
-        self::errorToFlash($this->getMessages());
-    }
-
-    public static function fail($obj, Array $rules){
-        $val = new self($obj, $rules);
-        return $val->exec() ? false:$val->getMessages();
+    public static function range($value, $min=0, $max=NULL)
+    {
+        $int_options = array('options' => array('min_range'=>$min, 'max_range'=>$max));
+        return filter_var($value, FILTER_VALIDATE_INT, $int_options);
     }
 
     /**
-     * Envia los mensajes de error via flash
-     * @param Array $error
+     * Valida que un valor se encuentre en una lista
+     * Retorna tru si el string $value se encuentra en la lista $list
+     *
+     * @param string $value
+     * @param array $list
+     * @return bool
      */
-    public static function errorToFlash(Array $error){
-        foreach ($error as $value)
-            Flash::error($value);
+    public static function inList($value, $list)
+    {
+        return in_array($value, $list);
     }
+
+    /**
+     * Valida que una cadena sea un mail
+     *
+     * @param string $mail
+     * @return bool
+     */
+    public static function mail($mail)
+    {
+        return filter_var($mail, FILTER_VALIDATE_EMAIL);
+    }
+    /**
+     * Valida URL
+     *
+     * @param string $url
+     * @return bool
+     */
+    public static function url($url, $flag = 0)
+    {
+        return filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED | $flag);
+    }
+
+    /**
+     * Valida que sea una IP, por defecto v4
+     *
+     * @param String $ip
+     * @return bool
+     */
+    public static function ip($ip, $flags = FILTER_FLAG_IPV4)
+    {
+        return filter_var($ip, FILTER_VALIDATE_IP, $flags);
+    }
+
+    /**
+     * Valida que un string no sea null
+     *
+     * @param string $check
+     * @return bool
+     */
+    public static function required($check)
+    {
+        return !empty($check) && $check!='0';
+    }
+
+    /**
+     * Valida que un String sea alpha-num (incluye caracteres acentuados)
+     *
+     * @param string $string
+     * @return bool
+     */
+    public static function alphanum($string)
+    {
+        return self::pattern($string, self::IS_ALPHANUM);
+    }
+
+    /**
+     * Valida una fecha
+     *
+     * @param string $value fecha a validar acorde al formato indicado
+     * @param string $format formato de fecha. acepta: d-m-y, y-m-d, m-d-y, donde el "-" puede ser cualquier caracter
+     *                       de separacion incluso un espacio en blanco o ".", exceptuando (d,m,y o números).
+     * @return boolean
+     */
+    public static function date($value, $format = 'd-m-y')
+    {
+        // busca el separador removiendo los caracteres de formato
+        $separator = str_replace(array('d' , 'm' , 'y'), '', $format);
+        $separator = $separator[0]; // el separador es el primer caracter
+        if ($separator && substr_count($value, $separator) == 2) {
+            switch (str_replace($separator, '', $format)) {
+                case 'dmy':
+                    list ($day, $month, $year) = explode($separator, $value);
+                    break;
+                case 'mdy':
+                    list ($month, $day, $year) = explode($separator, $value);
+                    break;
+                case 'ymd':
+                    list ($year, $month, $day) = explode($separator, $value);
+                    break;
+                default:
+                    return false;
+            }
+            if (ctype_digit($month) && ctype_digit($day) && ctype_digit($year)) {
+                return checkdate($month, $day, $year);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Valida un string dada una Expresion Regular
+     *
+     * @param string $check
+     * @param string $regex
+     * @return bool
+     */
+    public static function pattern($check, $regex)
+    {
+        return filter_var($check, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $regex)));
+    }
+
+    /**
+     * Valida si es un número decimal
+     *
+     * @param string $value
+     * @param string $decimal
+     * @return boolean
+     */
+    public static function decimal($value, $decimal = ',')
+    {
+		return filter_var($value, FILTER_VALIDATE_FLOAT, array('options' => array('decimal' => $decimal)));
+	}
 }

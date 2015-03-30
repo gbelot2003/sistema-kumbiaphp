@@ -48,7 +48,7 @@ class ModelConsole
         if (count($path)) {
             $dir = implode('/', $path);
             $file .= "/$dir";
-            if (!is_dir($file) && !FileUtil::mkdir($file)) {
+            if (!is_dir($file) && !Util::mkpath($file)) {
                 throw new KumbiaException("No se ha logrado crear el directorio \"$file\"");
             }
         }
@@ -89,7 +89,7 @@ class ModelConsole
 
         // si es un directorio
         if (is_dir($file)) {
-            $success = FileUtil::rmdir($file);
+            $success = Util::removedir($file);
         } else {
             // entonces es un archivo
             $file = "$file.php";

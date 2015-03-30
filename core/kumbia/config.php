@@ -29,7 +29,7 @@
  * @category   Kumbia
  * @package    Config
  */
-class Config
+final class Config
 {
 
     /**
@@ -93,7 +93,7 @@ class Config
     /**
      * Lee un archivo de configuracion
      *
-     * @param string $file archivo .ini
+     * @param $file archivo .ini
      * @param boolean $force forzar lectura de .ini
      * @return array
      */

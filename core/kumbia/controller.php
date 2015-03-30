@@ -24,118 +24,115 @@
  * @category   Kumbia
  * @package    Controller
  */
-class Controller {
+class Controller
+{
 
-	/**
-	 * Nombre del modulo actual
-	 *
-	 * @var string
-	 */
-	public $module_name;
-	/**
-	 * Nombre del controlador actual
-	 *
-	 * @var string
-	 */
-	public $controller_name;
-	/**
-	 * Nombre de la acción actual
-	 *
-	 * @var string
-	 */
-	public $action_name;
-	/**
-	 * Parámetros de la acción
-	 *
-	 * @var array
-	 */
-	public $parameters;
-	/**
-	 * Limita la cantidad correcta de
-	 * parametros de una action
-	 *
-	 * @var bool
-	 */
-	public $limit_params = TRUE;
-	/**
-	 * Nombre del scaffold a usar
-	 *
-	 * @var string
-	 */
-	public $scaffold;
+    /**
+     * Nombre del modulo actual
+     *
+     * @var string
+     */
+    public $module_name;
+    /**
+     * Nombre del controlador actual
+     *
+     * @var string
+     */
+    public $controller_name;
+    /**
+     * Nombre de la acción actual
+     *
+     * @var string
+     */
+    public $action_name;
+    /**
+     * Limita la cantidad correcta de
+     * parametros de una action
+     *
+     * @var bool
+     */
+    public $limit_params = TRUE;
+    /**
+     * Nombre del scaffold a usar
+     *
+     * @var string
+     */
+    public $scaffold;
 
-	/**
-	 * Data disponble para mostrar
-	 */
-	public $data;
+    /**
+     * Constructor
+     *
+     * @param string $module modulo al que pertenece el controlador
+     * @param string $controller nombre del controlador
+     * @param string $action nombre de la accion
+     * @param array $parameters parametros enviados por url
+     */
+    public function __construct($module, $controller, $action, $parameters)
+    {
+        //TODO: enviar un objeto
+        $this->module_name = $module;
+        $this->controller_name = $controller;
+        $this->parameters = $parameters;
+        $this->action_name = $action;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param array $args
-	 */
-	public function __construct($args) {
-		/*modulo al que pertenece el controlador*/
-		$this->module_name = $args['module'];
-		$this->controller_name = $args['controller'];
-		$this->parameters = $args['parameters'];
-		$this->action_name = $args['action'];
-		View::select($args['action']);
-		View::setPath($args['controller_path']);
-	}
+    /**
+     * BeforeFilter
+     *
+     * @return bool
+     */
+    protected function before_filter()
+    {
 
-	/**
-	 * BeforeFilter
-	 *
-	 * @return false|null
-	 */
-	protected function before_filter() {
+    }
 
-	}
+    /**
+     * AfterFilter
+     *
+     * @return bool
+     */
+    protected function after_filter()
+    {
 
-	/**
-	 * AfterFilter
-	 *
-	 * @return false|null
-	 */
-	protected function after_filter() {
+    }
 
-	}
+    /**
+     * Initialize
+     *
+     * @return bool
+     */
+    protected function initialize()
+    {
 
-	/**
-	 * Initialize
-	 *
-	 * @return false|null
-	 */
-	protected function initialize() {
+    }
 
-	}
+    /**
+     * Finalize
+     *
+     * @return bool
+     */
+    protected function finalize()
+    {
 
-	/**
-	 * Finalize
-	 *
-	 * @return false|null
-	 */
-	protected function finalize() {
+    }
 
-	}
+    /**
+     * Ejecuta los callback filter
+     *
+     * @param boolean $init filtros de inicio
+     * @return void
+     */
+    final public function k_callback($init = FALSE)
+    {
+        if ($init) {
+            if ($this->initialize() !== FALSE) {
+                return $this->before_filter();
+            }
+            return FALSE;
+        }
 
-	/**
-	 * Ejecuta los callback filter
-	 *
-	 * @param boolean $init filtros de inicio
-	 * @return false|null
-	 */
-	final public function k_callback($init = FALSE) {
-		if ($init) {
-			if ($this->initialize() !== FALSE) {
-				return $this->before_filter();
-			}
-			return FALSE;
-		}
-
-		$this->after_filter();
-		$this->finalize();
-	}
+        $this->after_filter();
+        $this->finalize();
+    }
 
 }

@@ -44,7 +44,8 @@ class Redirect
         if ($seconds) {
             header("Refresh: $seconds; url=$route");
         } else {
-            header('Location: '.$route, TRUE, $statusCode);
+            header('HTTP/1.1 ' . $statusCode);
+            header("Location: $route");
             $_SESSION['KUMBIA.CONTENT'] = ob_get_clean();
             View::select(null, null);
         }
@@ -73,7 +74,6 @@ class Redirect
     {
         static $cyclic = 0;
         $url = Util::getParams(func_get_args());
-        $vars = array();
 
         if (isset($url['module'])) {
             $vars['module'] = $url['module'];

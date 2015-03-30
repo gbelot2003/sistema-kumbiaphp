@@ -106,12 +106,16 @@ class KumbiaView
      * ej. View::response('xml');
      * buscara: views/controller/action.xml.phtml
      *
-     * @param string $response
+     * @param string $type
      * @param string $template Opcional nombre del template sin .phtml
      */
     public static function response($response, $template = FALSE)
     {
-        self::$_response = $response;
+        if ($response == 'view') { //se mantiene pero ya esta deprecated
+            self::$_template = NULL;
+        } else {
+            self::$_response = $response;
+        }
 
         // verifica si se indico template
         if ($template !== FALSE) {
@@ -145,7 +149,7 @@ class KumbiaView
     /**
      * Obtiene un atributo de KumbiaView
      *
-     * @param string $atribute nombre de atributo (template, response, path, etc)
+     * @param string $attribute nombre de atributo (template, response, path, etc)
      */
     public static function get($atribute)
     {
@@ -189,39 +193,12 @@ class KumbiaView
     }
 
     /**
-     * Obtiene el view
-     *
-     * @return string path del view
-     */
-    protected static function getView()
-    {
-        $file = APP_PATH . 'views/' . self::getPath();
-        //Si no existe el view y es scaffold
-        if (!is_file($file) && ($scaffold = self::$_controller->scaffold)) {
-            $file = APP_PATH . "views/_shared/scaffolds/$scaffold/".self::$_view.'.phtml';
-        }
-        return $file;
-    }
-    /**
-     * Cachea el view o template
-     *
-     * @param string $type view o template
-     * @return void
-     */
-    protected static function saveCache($type)
-    {
-        // si esta en produccion y se cachea la vista
-        if (PRODUCTION && self::$_cache['type'] === $type) {
-                Cache::driver()->save(ob_get_contents(), self::$_cache['time'], Router::get('route'), self::$_cache['group']);
-            }
-    }
-
-    /**
      * Renderiza la vista
      *
      * @param Controller $controller
+     * @param string $url url a renderizar
      */
-    public static function render(Controller $controller)
+    public static function render(/* Controller */ $controller, /* Router */  $_url)
     {
         if (!self::$_view && !self::$_template)
             return ob_end_flush();
@@ -229,32 +206,31 @@ class KumbiaView
         // Guarda el controlador
 		self::$_controller = $controller;
 
-		self::generate($controller);
-	}
-
-	/**
-     * Genera la vista
-     *
-     * @param Controller $controller
-     */
-    protected static function generate(Controller $controller)
-    {
         // Mapea los atributos del controller en el scope
         extract(get_object_vars($controller), EXTR_OVERWRITE);
 
         // carga la vista si tiene view y no esta cacheada
-        if (self::$_view && self::$_content === NULL) {
+        if (($__view = self::$_view) && self::$_content === NULL) {
             // Carga el contenido del buffer de salida
             self::$_content = ob_get_clean();
+
             // Renderizar vista
             ob_start();
 
+            $__file = APP_PATH . 'views/' . self::getPath();
+            //Si no existe el view y es scaffold
+            if (!is_file($__file) && $scaffold) {
+                $__file = APP_PATH . "views/_shared/scaffolds/$scaffold/$__view.phtml";
+            }
+
             // carga la vista
-            if (!include self::getView())
+            if (!include $__file)
                 throw new KumbiaException('Vista "' . self::getPath() . '" no encontrada', 'no_view');
 
             // si esta en produccion y se cachea la vista
-            self::saveCache('view');
+            if (PRODUCTION && self::$_cache['type'] == 'view') {
+                Cache::driver()->save(ob_get_contents(), self::$_cache['time'], Router::get('route'), self::$_cache['group']);
+            }
 
             // Verifica si hay template
             if (!self::$_template) {
@@ -264,7 +240,7 @@ class KumbiaView
 
             self::$_content = ob_get_clean();
 
-        }
+        } //else {ob_clean()}
 
         // Renderizar template
         if ($__template = self::$_template) {
@@ -275,7 +251,9 @@ class KumbiaView
                 throw new KumbiaException("Template $__template no encontrado");
 
             // si esta en produccion y se cachea template
-            self::saveCache('template');
+            if (PRODUCTION && self::$_cache['type'] == 'template') {
+                Cache::driver()->save(ob_get_contents(), self::$_cache['time'], Router::get('route'), self::$_cache['group']);
+            }
 
             return ob_end_flush();
         }
@@ -300,13 +278,13 @@ class KumbiaView
      * Renderiza una vista parcial
      *
      * @param string $partial vista a renderizar
-     * @param FALSE|string $__time tiempo de cache
+     * @param string $time tiempo de cache
      * @param array $params
      * @param string $group grupo de cache
      * @return string
      * @throw KumbiaException
      */
-    public static function partial($partial, $__time=FALSE, $params=NULL, $group ='kumbia.partials')
+    public static function partial($partial, $__time=FALSE, $params=array(), $group ='kumbia.partials')
     {
         if (PRODUCTION && $__time && !Cache::driver()->start($__time, $partial, $group)) {
             return;
@@ -320,14 +298,12 @@ class KumbiaView
             $__file = CORE_PATH . "views/partials/$partial.phtml";
         }
 
-        if($params){
-        	if (is_string($params)) {
-            		$params = Util::getParams(explode(',', $params));
-        	}
-
-        	// carga los parametros en el scope
-        	extract($params, EXTR_OVERWRITE);
+        if (is_string($params)) {
+            $params = Util::getParams($params);
         }
+
+        // carga los parametros en el scope
+        extract($params, EXTR_OVERWRITE);
 
         // carga la vista parcial
         if (!include $__file) {
@@ -338,6 +314,28 @@ class KumbiaView
         if (PRODUCTION && $__time) {
             Cache::driver()->end();
         }
+    }
+
+    /**
+     * Carga los helpers
+     * @deprecated ahora se cargan automaticamente
+     *
+     * @param string $helper
+     * @throw KumbiaException
+     */
+    public static function helpers($helper)
+    {
+        $helper = Util::smallcase($helper);
+        $path = "extensions/helpers/$helper.php";
+        $file = APP_PATH . $path;
+
+        if (!is_file($file)) {
+            if (!include_once CORE_PATH . $path)
+                throw new KumbiaException("Helpers $helper no encontrado");
+            return;
+        }
+
+        require_once $file;
     }
 
 	/**

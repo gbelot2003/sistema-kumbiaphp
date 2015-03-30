@@ -36,10 +36,10 @@ class Ipv4Filter implements FilterInterface
      * @param array $options
      * @return string
      */
-    public static function execute($value, $options)
+    public static function execute($s, $options)
     {
         $patron = '/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/';
-        if (preg_match($patron, $value, $regs)) {
+        if (preg_match($patron, $s, $regs)) {
             return $regs[0];
         } else {
             return '';

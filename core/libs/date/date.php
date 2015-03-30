@@ -36,25 +36,25 @@ class Date
     /**
      * Valor interno del Dia
      *
-     * @var int|string
+     * @var string
      */
     private $day;
     /**
-     * Valor interno del Año
+     * Valor interno del A&ntilde;o
      *
-     * @var int|string
+     * @var string
      */
     private $year;
     /**
      * Valor interno del Mes
      *
-     * @var int|string
+     * @var string
      */
     private $month;
     /**
      * Valor interno del Mes
      *
-     * @var int
+     * @var string
      */
     private $timestamp;
 
@@ -294,9 +294,11 @@ class Date
      */
     public function isYesterday()
     {
-        $time = mktime(0, 0, 0, date("m"), date("d"), date("Y")) - 86400;
-
-        if ($this->timestamp == $time) {
+        if (!isset($this->yesterday)) {
+            $time = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+            $this->yesterday = $time - 86400;
+        }
+        if ($this->timestamp == $this->yesterday) {
             return true;
         } else {
             return false;
@@ -304,15 +306,17 @@ class Date
     }
 
     /**
-     * Devuelve true si la fecha interna es la de mañana
+     * Devuelve true si la fecha interna es la de ma#ana
      *
      * @return boolean
      */
     public function isTomorrow()
     {
-        $time = mktime(0, 0, 0, date("m"), date("d"), date("Y")) + 86400;
-
-        if ($this->timestamp == $time) {
+        if (!isset($this->tomorrow)) {
+            $time = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+            $this->tomorrow = $time - 86400;
+        }
+        if ($this->timestamp == $this->tomorrow) {
             return true;
         } else {
             return false;

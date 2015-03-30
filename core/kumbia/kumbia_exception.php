@@ -28,26 +28,12 @@ class KumbiaException extends Exception
 {
 
     /**
-     * View de error de la Excepción
+     * Codigo de error de la Excepcion
      *
      * @var string
      */
     protected $_view;
-    
-    /**
-     * Error 404 para los siguientes views
-     *
-     * @var array
-     */
-    protected static $view404 = array('no_controller', 'no_action', 'num_params');
 
-    /**
-     * Path del template de exception
-     *
-     * @var string
-     */
-    protected $template = 'views/templates/exception.phtml';
-    
     /**
      * Constructor de la clase;
      *
@@ -65,20 +51,29 @@ class KumbiaException extends Exception
      *
      * @param Exception $e
      * */
-    public static function handleException($e)
+    public static function handle_exception($e)
     {
-        self::setHeader($e);
+        if (isset($e->_view) && ($e->_view == 'no_controller' || $e->_view == 'no_action')) {
+            header('HTTP/1.1 404 Not Found');
+        } else {
+            header('HTTP/1.1 500 Internal Server Error');
+        }
+
         extract(Router::get(), EXTR_OVERWRITE);
 
         $Controller = Util::camelcase($controller);
         ob_start();
-        if (PRODUCTION) { //TODO: añadir error 500.phtml
+        if (PRODUCTION) {
             include APP_PATH . 'views/_shared/errors/404.phtml';
             return;
+        } else {
+            $Template = 'views/templates/exception.phtml';
+            if (isset($e->_view)) {
+                include CORE_PATH . "views/errors/{$e->_view}.phtml";
+            } else {
+                include CORE_PATH . "views/errors/exception.phtml";
+            }
         }
-
-        include CORE_PATH . "views/errors/{$e->_view}.phtml";
- 
         $content = ob_get_clean();
 
         // termina los buffers abiertos
@@ -86,18 +81,15 @@ class KumbiaException extends Exception
             ob_end_clean();
         }
 
-        include CORE_PATH . $e->template;
+        // verifica si esta cargado el View
+        if (class_exists('View')) {
+            if (View::get('template') === NULL) {
+                echo $content;
+                exit;
+            }
+        }
+
+        include CORE_PATH . $Template;
     }
 
-    /**
-     * Añade la cabezera de error http
-     * */
-    private static function setHeader($e)
-    {
-        if (isset($e->_view) && in_array($e->_view, self::$view404)){
-            header('HTTP/1.1 404 Not Found');
-        } else {
-            header('HTTP/1.1 500 Internal Server Error');
-        } //TODO: mover a los views
-    }
 }

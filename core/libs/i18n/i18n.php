@@ -82,7 +82,12 @@ class I18n
          * Si se pasan multiples parametros
          * */
         if (func_num_args() > 3) {
-            $sentence = $sentence = self::sprintf($sentence, func_get_args(), 3);
+            $args = func_get_args();
+            /**
+             * Se remplaza con vsprintf
+             * */
+            unset($args[0], $args[1], $args[2]);
+            $sentence = vsprintf($sentence, $args);
         }
 
         return $sentence;
@@ -106,7 +111,12 @@ class I18n
          * Si se pasan multiples parametros
          * */
         if (func_num_args() > 2) {
-            $sentence = $sentence = self::sprintf($sentence, func_get_args(), 2);
+            $args = func_get_args();
+            /**
+             * Se remplaza con vsprintf
+             * */
+            unset($args[0], $args[1]);
+            $sentence = vsprintf($sentence, $args);
         }
 
         return $sentence;
@@ -121,7 +131,7 @@ class I18n
      * @param int $category categoria del mensaje (LC_CTYPE, LC_NUMERIC, LC_TIME, LC_COLLATE, LC_MONETARY, LC_MESSAGES, LC_ALL)
      * @return string
      * */
-    public static function cnget($sentence1, $sentence2, $n, $category)
+    public function cnget($sentence1, $sentence2, $n, $category)
     {
         /**
          * Obtengo la traduccion en funcion del dominio
@@ -132,16 +142,15 @@ class I18n
          * Si se pasan multiples parametros
          * */
         if (func_num_args() > 4) {
-            $sentence = self::sprintf($sentence, func_get_args(), 4);
+            $args = func_get_args();
+            /**
+             * Se remplaza con vsprintf
+             * */
+            unset($args[0], $args[1], $args[2], $args[3]);
+            $sentence = vsprintf($sentence, $args);
         }
 
         return $sentence;
     }
-    
-    
-    private static function sprintf($sentence, $args, $offset)
-    {
-        return vsprintf( $sentence, array_slice( $args, $offset));
-        
-    }
+
 }

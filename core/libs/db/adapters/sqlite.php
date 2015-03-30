@@ -46,7 +46,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
      *
      * @var string
      */
-    protected $last_query;
+    private $last_query;
     /**
      * Ultimo error generado por SQLite
      *
@@ -113,7 +113,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
      * Hace una conexion a la base de datos de SQLite
      *
      * @param array $config
-     * @return bool
+     * @return resource_connection
      */
     public function connect($config)
     {
@@ -140,7 +140,12 @@ class DbSQLite extends DbBase implements DbBaseInterface
         if ($this->logger) {
             Logger::debug($sqlQuery);
         }
-
+        if (!$this->id_connection) {
+            $this->connect();
+            if (!$this->id_connection) {
+                return false;
+            }
+        }
         $this->last_query = $sqlQuery;
         if ($resultQuery = @sqlite_query($this->id_connection, $sqlQuery)) {
             $this->last_result_query = $resultQuery;
@@ -171,7 +176,9 @@ class DbSQLite extends DbBase implements DbBaseInterface
      */
     function fetch_array($resultQuery='', $opt=SQLITE_BOTH)
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -197,6 +204,9 @@ class DbSQLite extends DbBase implements DbBaseInterface
      */
     function num_rows($resultQuery='')
     {
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -208,6 +218,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
         } else {
             throw new KumbiaException($this->error());
         }
+        return false;
     }
 
     /**
@@ -219,7 +230,9 @@ class DbSQLite extends DbBase implements DbBaseInterface
      */
     function field_name($number, $resultQuery='')
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -231,6 +244,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
         } else {
             throw new KumbiaException($this->error());
         }
+        return false;
     }
 
     /**
@@ -253,6 +267,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
         } else {
             throw new KumbiaException($this->error());
         }
+        return false;
     }
 
     /**
@@ -263,7 +278,9 @@ class DbSQLite extends DbBase implements DbBaseInterface
      */
     function affected_rows($resultQuery='')
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -275,6 +292,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
         } else {
             throw new KumbiaException($this->error());
         }
+        return false;
     }
 
     /**
@@ -285,7 +303,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
     function error($err='')
     {
         if (!$this->id_connection) {
-            $this->last_error = sqlite_last_error($this->id_connection) ? sqlite_last_error($this->id_connection) . $err : "[Error Desconocido en SQLite \"$err\"]";
+            $this->last_error = sqlite_last_error() ? sqlite_last_error() . $err : "[Error Desconocido en SQLite \"$err\"]";
             if ($this->logger) {
                 Logger::error($this->last_error);
             }
@@ -306,7 +324,10 @@ class DbSQLite extends DbBase implements DbBaseInterface
      */
     function no_error()
     {
-        return 0; //Codigo de Error?
+        if (!$this->id_connection) {
+            return false;
+        }
+        return "0"; //Codigo de Error?
     }
 
     /**
@@ -316,6 +337,9 @@ class DbSQLite extends DbBase implements DbBaseInterface
      */
     public function last_insert_id($table='', $primary_key='')
     {
+        if (!$this->id_connection) {
+            return false;
+        }
         $last_id = $this->fetch_one("SELECT COUNT(*) FROM $table");
         return $last_id[0];
     }
@@ -382,7 +406,7 @@ class DbSQLite extends DbBase implements DbBaseInterface
      *
      * @param string $table
      * @param array $definition
-     * @return boolean|null
+     * @return boolean
      */
     public function create_table($table, $definition, $index=array())
     {

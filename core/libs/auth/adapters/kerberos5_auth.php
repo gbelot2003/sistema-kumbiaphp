@@ -58,18 +58,6 @@ class Kerberos5Auth implements AuthInterface
      * Resource Kerberos5
      */
     private $resource;
-    /**
-     * Realm para autentificar
-     *
-     * @var string
-     */
-    private $realm;
-    /**
-     * El principal
-     *
-     * @var string
-     */
-    private $principal;
 
     /**
      * Constructor del adaptador

@@ -38,7 +38,7 @@ class Input
 	/**
 	 * Indica si el request es AJAX
 	 *
-	 * @return boolean
+	 * @return Bolean
 	 */
 	public static function isAjax()
 	{
@@ -51,9 +51,9 @@ class Input
 	 * @param string $var
 	 * @return mixed
 	 */
-	public static function post($var = '')
+	public static function post($var)
 	{
-		return self::getFilter($_POST, $var);
+		return filter_has_var(INPUT_POST, $var) ? $_POST[$var] : NULL;
 	}
 
 	/**
@@ -63,9 +63,15 @@ class Input
 	 * @param string $var
 	 * @return mixed
 	 */
-	public static function get($var = '')
+	public static function get($var = NULL)
 	{
-		return self::getFilter($_GET, $var);
+		if($var){
+			$value = filter_has_var(INPUT_GET, $var) ? filter_input(INPUT_GET, $var, FILTER_SANITIZE_STRING) : NULL;
+		} else {
+			$value = filter_input_array (INPUT_GET, FILTER_SANITIZE_STRING);
+		}
+
+		return $value;
 	}
 
 	/**
@@ -74,9 +80,9 @@ class Input
 	 * @param string $var
 	 * @return mixed
 	 */
-	public static function request($var = '')
+	public static function request($var)
 	{
-		return self::getFilter($_REQUEST, $var);
+		return isset($_REQUEST[$var]) ? $_REQUEST[$var] : NULL;
 	}
 
 	/**
@@ -87,7 +93,7 @@ class Input
 	 */
 	public static function hasPost($var)
 	{
-		return (bool)self::post($var);
+		return filter_has_var(INPUT_POST, $var);
 	}
 
 	/**
@@ -98,7 +104,7 @@ class Input
 	 */
 	public static function hasGet($var)
 	{
-		return (bool)self::get($var);
+		return filter_has_var(INPUT_GET, $var);
 	}
 
 	/**
@@ -109,14 +115,14 @@ class Input
 	 */
 	public static function hasRequest($var)
 	{
-		return (bool)self::request($var);
+		return isset($_REQUEST[$var]);
 	}
 
 	/**
 	 * Elimina elemento indicado en $_POST
 	 *
 	 * @param string $var elemento a verificar
-	 * @return boolean|null
+	 * @return boolean
 	 */
 	public static function delete($var = NULL)
 	{
@@ -162,26 +168,5 @@ class Input
 		//TODO
     }
 
-    /**
-     * Devuelve el valor dentro de un array con clave en formato uno.dos.tres
-     * @param Array array que contiene la variable
-     * @param string $str clave a usar
-     * @return mixed
-     */
-    protected static function getFilter(Array $var, $str){
-    	if(empty($str))
-    		return filter_var_array($var);
-    	$arr = explode('.', $str);
-    	$value = $var;
-    	foreach ($arr as $key) {
-    		if(isset($value[$key])){
-    			$value = $value[$key];
-    		} else{
-    			$value = NULL;
-    			break;
-    		}
-    	}
-    	return is_array($value)?filter_var_array($value): filter_var($value);
-    }
 
 }

@@ -51,7 +51,7 @@ class Util
      * Descameliza una cadena camelizada y la convierte a smallcase
      * @deprecated mejor usar el metodo smallcase directamente
      *
-     * @param string $str Texto para descamelizar
+     * @param string $s
      * @return string
      */
     public static function uncamelize($str)
@@ -100,6 +100,33 @@ class Util
     }
 
     /**
+     * Merge Two Arrays Overwriting Values $a1
+     * from $a2
+     * @deprecated
+     *
+     * @param array $a1
+     * @param array $a2
+     * @return array
+     */
+    public static function array_merge_overwrite($a1, $a2)
+    {
+        return $a2 + $a1;
+    }
+
+    /**
+     * Insertar para arrays númericos
+     * @deprecated No es necesario
+     *
+     * @param array &$array array donde se insertará (por referencia)
+     * @param int $position Indice donde se realizara la insercion
+     * @param mixed $insert Valor a insertar
+     * */
+    public static function array_insert(&$array, $position, $insert)
+    {
+        array_splice($array, $position, 0, $insert);
+    }
+
+    /**
      * Convierte los parametros de una funcion o metodo de parametros por nombre a un array
      *
      * @param array $params
@@ -133,6 +160,50 @@ class Util
     {
         $items = explode(',', $lista);
         return '"' . implode('","', $items) . '"';
+    }
+
+    /**
+     * Crea un path.
+     * @deprecated
+     * @todo Mover este método a una lib para manejo de ficheros.
+     * En salir la beta2 se eliminará del Util
+     *
+     * @param string $path ruta a crear
+     * @return boolean
+     */
+    public static function mkpath($path)
+    {
+        if (file_exists($path) or @mkdir($path))
+            return TRUE;
+        return (self::mkpath(dirname($path)) and mkdir($path));
+    }
+
+    /**
+     * Elimina un directorio.
+     * @deprecated
+     * @todo Mover este método a una lib para manejo de ficheros.
+     * En salir la beta2 se eliminará del Util
+     *
+     * @param string $dir ruta de directorio a eliminar
+     * @return boolean
+     */
+    public static function removedir($dir)
+    {
+        // Obtengo los archivos en el directorio a eliminar
+        if ($files = array_merge(glob("$dir/*"), glob("$dir/.*"))) {
+            // Elimino cada subdirectorio o archivo
+            foreach ($files as $file) {
+                // Si no son los directorios "." o ".."
+                if (!preg_match("/^.*\/?[\.]{1,2}$/", $file)) {
+                    if (is_dir($file)) {
+                        return self::removedir($file);
+                    } elseif (!@unlink($file)) {
+                        return FALSE;
+                    }
+                }
+            }
+        }
+        return @rmdir($dir);
     }
 
     /**

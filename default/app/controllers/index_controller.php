@@ -23,7 +23,7 @@ class IndexController extends AppController
 
 			$auth = new Auth("model", "class: user", "user: $user", "password: $pdw");
 			if($auth->authenticate()){
-				Router::redirect('index/');
+				Redirect::to('index');
 			} else {
 				Flash::error('Ha habido un error en tu login, por favor verifica tu usuario y password');
 			}

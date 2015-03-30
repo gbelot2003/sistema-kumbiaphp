@@ -154,8 +154,8 @@ class DbPdoOracle extends DbPDO
         $index = array();
         $unique_index = array();
         $primary = array();
-        //$not_null = "";
-        //$size = "";
+        $not_null = "";
+        $size = "";
         foreach ($definition as $field => $field_def) {
             if (isset($field_def['not_null'])) {
                 $not_null = $field_def['not_null'] ? 'NOT NULL' : '';
@@ -214,6 +214,7 @@ class DbPdoOracle extends DbPDO
     /**
      * Listado de Tablas
      *
+     * @param string $table
      * @return boolean
      */
     function list_tables()

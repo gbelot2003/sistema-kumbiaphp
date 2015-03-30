@@ -59,10 +59,6 @@ class ModelAuth implements AuthInterface
      * Identidad encontrara
      */
     private $identity = array();
-    /**
-     * Nombre de la clase del modelo
-     */
-    private $class;
 
     /**
      * Constructor del adaptador

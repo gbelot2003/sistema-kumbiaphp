@@ -94,7 +94,7 @@ class Flash
      *
      * @param string $text
      *
-     * @deprecated  ahora Flash::info()
+     * @deprecated  ahora Flah::info()
      */
     public static function notice($text)
     {

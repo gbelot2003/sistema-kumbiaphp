@@ -153,7 +153,7 @@ abstract class Auth2
      */
     public function isValid()
     {
-        session_regenerate_id(TRUE);
+        session_regenerate_id();
 
         if ($this->_checkSession) {
             $this->_checkSession();
@@ -210,7 +210,7 @@ abstract class Auth2
     /**
      * Indica el mensaje de error
      *
-     * @param string $error
+     * @param string $_error
      */
     public function setError($error)
     {

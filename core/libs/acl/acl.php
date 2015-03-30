@@ -105,8 +105,8 @@ class Acl
      * Ej:
      * <code>$acl->add_role(new Acl_Role('administrador'), 'consultor');</code>
      *
-     * @param AclRole $roleObject
-     * @return false|null
+     * @param string $roleObject
+     * @return boolean
      */
     public function add_role(AclRole $roleObject, $access_inherits='')
     {
@@ -140,9 +140,9 @@ class Acl
                     }
                     if (!in_array($rol_in, $this->roles_names)) {
                         throw new KumbiaException("El Rol '{$rol_in}' no existe en la lista");
-
+                        return false;
                     }
-                    $this->role_inherits[$role][] = $rol_in;
+                    $this->role_inherits[$role][] = $role_in;
                 }
                 $this->rebuild_access_list();
             } else {
@@ -151,14 +151,14 @@ class Acl
                 }
                 if (!in_array($role_to_inherit, $this->roles_names)) {
                     throw new KumbiaException("El Rol '{$role_to_inherit}' no existe en la lista");
-
+                    return false;
                 }
                 $this->role_inherits[$role][] = $role_to_inherit;
                 $this->rebuild_access_list();
             }
         } else {
             throw new KumbiaException("Debe especificar un rol a heredar en Acl::add_inherit");
-
+            return false;
         }
     }
 
@@ -202,7 +202,7 @@ class Acl
      * </code>
      *
      * @param AclResource $resource
-     * @return boolean|null
+     * @return boolean
      */
     public function add_resource(AclResource $resource)
     {
@@ -221,7 +221,7 @@ class Acl
     /**
      * Agrega accesos a un Resource
      *
-     * @param string $resource
+     * @param $resource
      * @param $access_list
      */
     public function add_resource_access($resource, $access_list)
@@ -297,17 +297,17 @@ class Acl
     {
         if (!in_array($role, $this->roles_names)) {
             throw new KumbiaException("No existe el rol '$role' en la lista");
-
+            return;
         }
         if (!in_array($resource, $this->resources_names)) {
             throw new KumbiaException("No existe el resource '$resource' en la lista");
-
+            return;
         }
         if (is_array($access)) {
             foreach ($access as $acc) {
                 if (!in_array($acc, $this->access_list[$resource])) {
                     throw new KumbiaException("No existe el acceso '$acc' en el resource '$resource' de la lista");
-
+                    return false;
                 }
             }
             foreach ($access as $acc) {
@@ -316,7 +316,7 @@ class Acl
         } else {
             if (!in_array($access, $this->access_list[$resource])) {
                 throw new KumbiaException("No existe el acceso '$access' en el resource '$resource' de la lista");
-
+                return false;
             }
             $this->access[$role][$resource][$access] = 'A';
             $this->rebuild_access_list();
@@ -351,17 +351,17 @@ class Acl
     {
         if (!in_array($role, $this->roles_names)) {
             throw new KumbiaException("No existe el rol '$role' en la lista");
-
+            return;
         }
         if (!in_array($resource, $this->resources_names)) {
             throw new KumbiaException("No existe el resource '$resource' en la lista");
-
+            return;
         }
         if (is_array($access)) {
             foreach ($access as $acc) {
                 if (!in_array($acc, $this->access_list[$resource])) {
                     throw new KumbiaException("No existe el acceso '$acc' en el resource '$resource' de la lista");
-
+                    return false;
                 }
             }
             foreach ($access as $acc) {
@@ -370,7 +370,7 @@ class Acl
         } else {
             if (!in_array($access, $this->access_list[$resource])) {
                 throw new KumbiaException("No existe el acceso '$access' en el resource '$resource' de la lista");
-
+                return false;
             }
             $this->access[$role][$resource][$access] = 'D';
             $this->rebuild_access_list();
@@ -393,30 +393,30 @@ class Acl
      *
      * @param string $role
      * @param string $resource
-     * @param mixed $access_list
-     * @return boolean|null
+     * @param mixed $access
+     * @return boolean
      */
     public function is_allowed($role, $resource, $access_list)
     {
         if (!in_array($role, $this->roles_names)) {
             throw new KumbiaException("El rol '$role' no existe en la lista en acl::is_allowed");
-
+            return false;
         }
         if (!in_array($resource, $this->resources_names)) {
             throw new KumbiaException("El resource '$resource' no existe en la lista en acl::is_allowed");
-
+            return false;
         }
         if (is_array($access_list)) {
             foreach ($access_list as $access) {
                 if (!in_array($access, $this->access_list[$resource])) {
                     throw new KumbiaException("No existe en acceso '$access' en el resource '$resource' en acl::is_allowed");
-
+                    return false;
                 }
             }
         } else {
             if (!in_array($access_list, $this->access_list[$resource])) {
                 throw new KumbiaException("No existe en acceso '$access_list' en el resource '$resource' en acl::is_allowed");
-
+                return false;
             }
         }
 

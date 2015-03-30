@@ -53,6 +53,8 @@ class SqliteCache extends Cache
         if (!$count) {
             sqlite_exec($this->_db, ' CREATE TABLE cache (id TEXT, "group" TEXT, value TEXT, lifetime TEXT) ');
         }
+
+        return $this->_db;
     }
 
     /**
@@ -113,7 +115,7 @@ class SqliteCache extends Cache
             return sqlite_exec($this->_db, " UPDATE cache SET value='$value', lifetime='$lifetime' WHERE id='$id' AND \"group\"='$group' ");
         }
 
-        return sqlite_exec($this->_db, " INSERT INTO cache (id, \"group\", value, lifetime) VALUES ('$id','$group','$value','$lifetime')");
+        return sqlite_exec($this->_db, " INSERT INTO cache (id, \"group\", value, lifetime) VALUES ('$id','$group','$value','$lifetime') ");
     }
 
     /**

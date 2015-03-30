@@ -77,7 +77,7 @@ class FileCache extends Cache
      * @param string $group
      * @param string $value
      * @param int $lifetime tiempo de vida en forma timestamp de unix
-     * @return bool
+     * @return boolean
      */
     public function save($value, $lifetime=null, $id=false, $group='default')
     {
@@ -92,7 +92,7 @@ class FileCache extends Cache
             $lifetime = 'undefined';
         }
 
-        return (bool) file_put_contents(APP_PATH . 'temp/cache/' . $this->_getFilename($id, $group), "$lifetime\n$value");
+        return file_put_contents(APP_PATH . 'temp/cache/' . $this->_getFilename($id, $group), "$lifetime\n$value");
     }
 
     /**
@@ -117,7 +117,7 @@ class FileCache extends Cache
      *
      * @param string $id
      * @param string $group
-     * @return bool
+     * @return string
      */
     public function remove($id, $group='default')
     {

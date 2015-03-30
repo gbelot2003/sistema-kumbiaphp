@@ -23,6 +23,11 @@ class AdminController extends Controller
         //Código de auth y permisos
         //Será libre, pero añadiremos uno por defecto en breve
         //Posiblemente se cree una clase abstracta con lo que debe tener por defecto
+
+		if(!Auth::is_valid()){
+			Flash::warning('Area no autorizada');
+			Redirect::to('/');
+		}
     }
 
     final protected function finalize()

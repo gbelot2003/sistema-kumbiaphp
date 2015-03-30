@@ -28,6 +28,13 @@ class Html
 {
 
     /**
+     * Alternador para tabla zebra
+     *
+     * @var boolean
+     * @deprecated
+     */
+    protected static $_trClassAlternate = TRUE;
+    /**
      * Metatags
      *
      * @var array
@@ -97,6 +104,39 @@ class Html
     }
 
     /**
+     * Aplica estilo zebra a una tabla.
+     *
+     * @param string $class class css
+     * @param string|array $attrs
+     * @param unknown_type $start
+     * @return string
+     * @deprecated Mejor usar CSS
+     */
+    public static function trClass($class, $attrs = NULL)
+    {
+        if (is_array($attrs)) {
+            $attrs = Tag::getAttrs($attrs);
+        }
+        if (self::$_trClassAlternate) {
+            self::$_trClassAlternate = FALSE;
+            return "<tr class='$class' $attrs >";
+        } else {
+            self::$_trClassAlternate = TRUE;
+            return "<tr $attrs >";
+        }
+    }
+
+    /**
+     * Inicia el alternador de clase para tabla zebra
+     *
+     * @deprecated Mejor usar CSS
+     */
+    public static function trClassStart()
+    {
+        self::$_trClassAlternate = TRUE;
+    }
+
+    /**
      * Crea un metatag
      *
      * @param string $content contenido del metatag
@@ -118,13 +158,13 @@ class Html
      */
     public static function includeMetatags()
     {
-        return implode(PHP_EOL, array_unique(self::$_metatags));
+        return implode(array_unique(self::$_metatags), PHP_EOL);
     }
 
     /**
      * Crea una lista a partir de un array
      *
-     * @param array $array Array con el contenido del metatag
+     * @param string $content contenido del metatag
      * @param string $type por defecto ul, y si no ol
      * @param string|array $attrs atributos
      * @return string
@@ -132,7 +172,7 @@ class Html
     public static function lists($array, $type = 'ul', $attrs = NULL)
     {
         if (is_array($attrs)) {
-            $attrs = Tag::getAttrs($attrs);
+            $attrs = self::getAttrs($attrs);
         }
 
         $list = "<$type $attrs>" . PHP_EOL;
@@ -167,7 +207,7 @@ class Html
     public static function headLink($href, $attrs = NULL)
     {
         if (is_array($attrs)) {
-            $attrs = Tag::getAttrs($attrs);
+            $attrs = self::getAttrs($attrs);
         }
 
         self::$_headLinks[] = array('href' => $href, 'attrs' => $attrs);

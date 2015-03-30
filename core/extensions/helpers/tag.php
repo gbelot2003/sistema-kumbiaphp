@@ -37,12 +37,11 @@ class Tag
     /**
      * Convierte los argumentos de un metodo de parametros por nombre a un string con los atributos
      *
-     * @param mixed $params argumentos a convertir
+     * @param array $params argumentos a convertir
      * @return string
      */
     public static function getAttrs($params)
     {
-        if(!is_array($params))return (string)$params;
         $data = '';
         foreach ($params as $k => $v) {
             $data .= " $k=\"$v\"";
@@ -79,7 +78,7 @@ class Tag
      */
     public static function js($src, $cache = TRUE)
     {
-        $src = "js/$src.js";
+        $src = "javascript/$src.js";
         if (!$cache) {
             $src .= '?nocache=' . uniqid();
         }

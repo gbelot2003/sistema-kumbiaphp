@@ -46,13 +46,13 @@ class DbOracle extends DbBase implements DbBaseInterface
      *
      * @var string
      */
-    protected $last_query;
+    private $last_query;
     /**
      * Ultimo error generado por Oracle
      *
      * @var string
      */
-    public $last_error;
+    public $lastError;
     /**
      * Indica si los modelos usan autocommit
      *
@@ -125,7 +125,7 @@ class DbOracle extends DbBase implements DbBaseInterface
      * Hace una conexion a la base de datos de Oracle
      *
      * @param array $config
-     * @return bool
+     * @return resource_connection
      */
     function connect($config)
     {
@@ -157,13 +157,19 @@ class DbOracle extends DbBase implements DbBaseInterface
         if ($this->logger) {
             Logger::debug($sqlQuery);
         }
-
+        if (!$this->id_connection) {
+            $this->connect();
+            if (!$this->id_connection) {
+                return false;
+            }
+        }
         $this->num_rows = false;
-        $this->last_query = $sqlQuery;
+        $this->lastQuery = $sqlQuery;
         $resultQuery = @oci_parse($this->id_connection, $sqlQuery);
         if ($resultQuery) {
             $this->last_result_query = $resultQuery;
         } else {
+            $this->last_result_query = false;
             throw new KumbiaException($this->error($php_errormsg));
         }
         if ($this->autocommit) {
@@ -173,6 +179,7 @@ class DbOracle extends DbBase implements DbBaseInterface
         }
 
         if (!@oci_execute($resultQuery, $commit)) {
+            $this->last_result_query = false;
             throw new KumbiaException($this->error($php_errormsg));
         }
         return $resultQuery;
@@ -195,9 +202,11 @@ class DbOracle extends DbBase implements DbBaseInterface
      * @param int $opt
      * @return array
      */
-    function fetch_array($resultQuery=NULL, $opt=OCI_BOTH)
+    function fetch_array($resultQuery='', $opt=OCI_BOTH)
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -211,6 +220,8 @@ class DbOracle extends DbBase implements DbBaseInterface
                 $result_to_lower[strtolower($key)] = $value;
             }
             return $result_to_lower;
+        } else {
+            return false;
         }
         return false;
     }
@@ -228,9 +239,11 @@ class DbOracle extends DbBase implements DbBaseInterface
     /**
      * Devuelve el numero de filas de un select
      */
-    function num_rows($resultQuery=NULL)
+    function num_rows($resultQuery='')
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -251,7 +264,9 @@ class DbOracle extends DbBase implements DbBaseInterface
             $commit = OCI_DEFAULT;
         }
         if (!@oci_execute($resultQuery, $commit)) {
+            $this->last_result_query = false;
             throw new KumbiaException($this->error($php_errormsg . " al ejecutar <em>'{$this->lastQuery}'</em>"));
+            return false;
         }
         $tmp = array();
         $this->num_rows = oci_fetch_all($resultQuery, $tmp);
@@ -267,9 +282,11 @@ class DbOracle extends DbBase implements DbBaseInterface
      * @param resource $resultQuery
      * @return string
      */
-    function field_name($number, $resultQuery=NULL)
+    function field_name($number, $resultQuery='')
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -282,6 +299,7 @@ class DbOracle extends DbBase implements DbBaseInterface
         } else {
             throw new KumbiaException($this->error());
         }
+        return false;
     }
 
     /**
@@ -291,7 +309,7 @@ class DbOracle extends DbBase implements DbBaseInterface
      * @param resource $resultQuery
      * @return boolean
      */
-    function data_seek($number, $resultQuery=NULL)
+    function data_seek($number, $resultQuery='')
     {
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
@@ -325,9 +343,11 @@ class DbOracle extends DbBase implements DbBaseInterface
      * @param resource $resultQuery
      * @return int
      */
-    function affected_rows($resultQuery=NULL)
+    function affected_rows($resultQuery='')
     {
-
+        if (!$this->id_connection) {
+            return false;
+        }
         if (!$resultQuery) {
             $resultQuery = $this->last_result_query;
             if (!$resultQuery) {
@@ -339,6 +359,7 @@ class DbOracle extends DbBase implements DbBaseInterface
         } else {
             throw new KumbiaException($this->error('Resource invalido para db::affected_rows'));
         }
+        return false;
     }
 
     /**
@@ -354,7 +375,7 @@ class DbOracle extends DbBase implements DbBaseInterface
                 $error['message'].=" > $err ";
                 return $error['message'];
             } else {
-                //$error.=" $php_errormsg ";
+                $error.=" $php_errormsg ";
                 return $error;
             }
         }
@@ -375,7 +396,7 @@ class DbOracle extends DbBase implements DbBaseInterface
     function no_error()
     {
         if (!$this->id_connection) {
-            $error = oci_error() ? oci_error() : 0;
+            $error = oci_error() ? oci_error() : "0";
             if (is_array($error)) {
                 return $error['code'];
             } else {
@@ -442,7 +463,7 @@ class DbOracle extends DbBase implements DbBaseInterface
      *
      * @param string $table
      * @param array $definition
-     * @return resource
+     * @return boolean
      */
     public function create_table($table, $definition, $index=array())
     {
@@ -454,8 +475,8 @@ class DbOracle extends DbBase implements DbBaseInterface
         $index = array();
         $unique_index = array();
         $primary = array();
-        //$not_null = "";
-        //$size = "";
+        $not_null = "";
+        $size = "";
         foreach ($definition as $field => $field_def) {
             if (isset($field_def['not_null'])) {
                 $not_null = $field_def['not_null'] ? 'NOT NULL' : '';
@@ -514,6 +535,7 @@ class DbOracle extends DbBase implements DbBaseInterface
     /**
      * Listado de Tablas
      *
+     * @param string $table
      * @return boolean
      */
     function list_tables()

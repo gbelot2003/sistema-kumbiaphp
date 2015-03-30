@@ -26,6 +26,14 @@
  */
 class FileUpload extends Upload
 {
+
+    /**
+     * Ruta donde se guardara el archivo
+     *
+     * @var string
+     */
+    protected $_path;
+
     /**
      * Constructor
      *

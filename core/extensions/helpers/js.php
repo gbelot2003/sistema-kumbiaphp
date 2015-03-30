@@ -40,7 +40,9 @@ class Js
      */
     public static function link($action, $text, $confirm = '¿Está Seguro?', $class = NULL, $attrs = NULL)
     {
-        $attrs = Tag::getAttrs($attrs);
+        if (is_array($attrs)) {
+            $attrs = Tag::getAttrs($attrs);
+        }
         return '<a href="' . PUBLIC_PATH . "$action\" data-msg=\"$confirm\" class=\"js-confirm $class\" $attrs>$text</a>";
     }
 
@@ -57,7 +59,9 @@ class Js
      */
     public static function linkAction($action, $text, $confirm = '¿Está Seguro?', $class = NULL, $attrs = NULL)
     {
-        $attrs = Tag::getAttrs($attrs);
+        if (is_array($attrs)) {
+            $attrs = Tag::getAttrs($attrs);
+        }
         return '<a href="' . PUBLIC_PATH . Router::get('controller_path') . "/$action\" data-msg=\"$confirm\" class=\"js-confirm $class\" $attrs>$text</a>";
     }
 
@@ -73,7 +77,9 @@ class Js
      */
     public static function submit($text, $confirm = '¿Está Seguro?', $class = NULL, $attrs = NULL)
     {
-        $attrs = Tag::getAttrs($attrs);
+        if (is_array($attrs)) {
+            $attrs = Tag::getAttrs($attrs);
+        }
         return "<input type=\"submit\" value=\"$text\" data-msg=\"$confirm\" class=\"js-confirm $class\" $attrs/>";
     }
 
@@ -87,7 +93,9 @@ class Js
      */
     public static function submitImage($img, $confirm = '¿Está Seguro?', $class = NULL, $attrs = NULL)
     {
-        $attrs = Tag::getAttrs($attrs);
+        if (is_array($attrs)) {
+            $attrs = Tag::getAttrs($attrs);
+        }
         return "<input type=\"image\" data-msg=\"$confirm\" src=\"" . PUBLIC_PATH . "img/$img\" class=\"js-confirm $class\" $attrs/>";
     }
 

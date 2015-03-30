@@ -60,12 +60,6 @@ class DigestAuth implements AuthInterface
      * @var string
      */
     private $realm;
-    /**
-     * Resource
-     *
-     * @var string
-     */
-    private $resource;
 
     /**
      * Constructor del adaptador

@@ -52,7 +52,7 @@ class DbBase
      *
      * @var string
      */
-    protected $last_query;
+    private $last_query;
 
     /**
      * Hace un select de una forma mas corta, listo para usar en un foreach
@@ -65,9 +65,9 @@ class DbBase
      */
     public function find($table, $where="1=1", $fields="*", $orderBy="1")
     {
-        ActiveRecord::sql_item_sanitize($table);
-        ActiveRecord::sql_sanitize($fields);
-        ActiveRecord::sql_sanitize($orderBy);
+        ActiveRecord::sql_item_sanizite($table);
+        ActiveRecord::sql_sanizite($fields);
+        ActiveRecord::sql_sanizite($orderBy);
         $q = $this->query("SELECT $fields FROM $table WHERE $where ORDER BY $orderBy");
         $results = array();
         while ($row = $this->fetch_array($q)) {
@@ -81,6 +81,7 @@ class DbBase
      * indexada por numeros y asociativamente
      *
      * @param string $sql
+     * @param integer $type
      * @return array
      */
     public function in_query($sql)
@@ -100,6 +101,7 @@ class DbBase
      * indexada por numeros y asociativamente (Alias para in_query)
      *
      * @param string $sql
+     * @param integer $type
      * @return array
      */
     public function fetch_all($sql)
@@ -112,6 +114,7 @@ class DbBase
      * indexada asociativamente
      *
      * @param string $sql
+     * @param integer $type
      * @return array
      */
     public function in_query_assoc($sql)
@@ -131,6 +134,7 @@ class DbBase
      * numerica
      *
      * @param string $sql
+     * @param integer $type
      * @return array
      */
     public function in_query_num($sql)
@@ -174,7 +178,7 @@ class DbBase
      */
     public function insert($table, $values, $fields=null)
     {
-        //$insert_sql = "";
+        $insert_sql = "";
         if (is_array($values)) {
             if (!count($values)) {
                 new KumbiaException("Imposible realizar inserci&oacute;n en $table sin datos");
@@ -291,28 +295,8 @@ class DbBase
     protected function debug($sql)
     {
         if ($this->debug) {
-            Flash::info($sql);
+            Flash::notice($sql);
         }
     }
 
-    /**
-     * Efectua operaciones SQL sobre la base de datos
-     * Este método lo extienden los adapters
-     * @param string $sql_query
-     * @return resource or false
-     */
-    public function query($sql)
-    {
-    }
-
-    /**
-     * Devuelve fila por fila el contenido de un select
-     * Este método lo extienden los adapters
-     * @param resource $resultQuery
-     * @param int $opt
-     * @return array
-     */
-    public function fetch_array($resultQuery = NULL, $opt = '')
-    {
-    }
 }

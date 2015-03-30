@@ -40,6 +40,7 @@ class AclResource
      * Constructor de la clase Rol
      *
      * @param string $name
+     * @return AclResource
      */
     function __construct($name)
     {

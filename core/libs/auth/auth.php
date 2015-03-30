@@ -82,7 +82,7 @@ class Auth
     /**
      * Constructor del Autenticador
      *
-     *
+     * @param string $adapter
      */
     public function __construct()
     {
@@ -96,9 +96,6 @@ class Auth
         $this->set_adapter($adapter, $this, $extra_args);
     }
 
-    /**
-     * @param Auth $auth
-     */
     public function set_adapter($adapter, $auth = null, $extra_args = array())
     {
         if (!in_array($adapter, array('digest', 'http', 'model', 'kerberos5', 'radius'))) {
@@ -113,9 +110,9 @@ class Auth
 
     /**
      * Obtiene el nombre del adaptador actual
-     * @return string
+     * @return boolean
      */
-    public function get_adapter_name()
+    public function get_adapter_name($adapter)
     {
         return $this->adapter;
     }
@@ -123,7 +120,7 @@ class Auth
     /**
      * Realiza el proceso de autenticación
      *
-     * @return array|bool
+     * @return array
      */
     public function authenticate()
     {
@@ -205,7 +202,7 @@ class Auth
     /**
      * Permite controlar que usuario no se loguee mas de una vez en el sistema desde cualquier parte
      *
-     * @bool string $value
+     * @param string $value
      */
     public function set_active_session($value, $time = 3600)
     {
@@ -311,7 +308,7 @@ class Auth
     {
         self::$is_valid = null;
         unset($_SESSION['KUMBIA_AUTH_VALID'][Config::get('config.application.namespace_auth')]);
-        self::$active_identity = array();
+        self::$active_identity = null;
         unset($_SESSION['KUMBIA_AUTH_IDENTITY'][Config::get('config.application.namespace_auth')]);
     }
 
