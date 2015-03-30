@@ -78,7 +78,7 @@ class Tag
      */
     public static function js($src, $cache = TRUE)
     {
-        $src = "javascript/$src.js";
+        $src = "js/$src.js";
         if (!$cache) {
             $src .= '?nocache=' . uniqid();
         }
