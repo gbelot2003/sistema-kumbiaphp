@@ -1,0 +1,16 @@
+<div class="row">
+	<div class="col-md-10 col-md-offset-1">
+
+		<div class="col-md-12">
+			<?php View::content() ?>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<?php print Form::open(); ?>
+				<?php View::partial('user/_form', NULL, array('submitButton' => "Editar")) ?>
+				<?php print Form::close() ?>
+			</div>
+		</div>
+	</div>
+</div>

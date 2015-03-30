@@ -19,9 +19,9 @@
 			<?php foreach($query as $row): ?>
 				<tr>
 					<td><?php print $row->id ?></td>
-					<td><?php print Html::link('edit/'.$row->id, $row->user) ?></td>
+					<td><?php print Html::link('user/edit/'.$row->id, $row->user) ?></td>
 					<td><?php print $row->rol->rol ?></td>
-					<td><?php print Html::link('delete/'.$row->id, 'Eliminar') ?></td>
+					<td><?php print Html::link('user/delete/'.$row->id, 'Eliminar') ?></td>
 				</tr>
 			<?php endforeach ?>
 			</tbody>
