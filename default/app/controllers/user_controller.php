@@ -5,10 +5,10 @@
  * @category App
  * @package Controllers
  */
-class UserController extends AppController
+class UserController extends AdminController
 {
 	public function index()
 	{
-
+		
 	}
 }
