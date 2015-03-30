@@ -19,15 +19,21 @@ class UserController extends AdminController
 		$this->query = Load::model('user')->find();
 	}
 
+	/**
+	 * @throws KumbiaException
+	 */
 	public function create()
 	{
 		$this->pageTitle = "Creacion de nuevo usuario";
 		if(Input::hasPost('user')){
-			$user = Load::model('user');
-			$this->pass 		= Input::post('password');
-			$this->repass		= Input::post('repassword');
 
-			if($this->pass == $this->repass){
+			$user 		= Load::model('user');
+			$usuario 	= Input::post('user');
+
+			$pass['pass'] 		= $usuario['password'];
+			$repass['pass']		= $usuario['repassword'];
+
+			if($pass === $repass){
 				if($user->save(Input::post('user'))){
 					Flash::valid('El usuario a sido creado');
 					Redirect::toAction('');
@@ -53,7 +59,8 @@ class UserController extends AdminController
 	{
 		$user = Load::model('user')->find_by_id((int) $id);
 		if($user->delete()){
-			
+			Redirect::toAction('');
+		} else {
 			Redirect::toAction('');
 		}
 
