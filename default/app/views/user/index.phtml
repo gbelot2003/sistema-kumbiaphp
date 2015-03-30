@@ -1,7 +1,30 @@
-<h2><?php print	$pageTitle ?></h2>
-
 <div class="row">
 	<div class="col-md-12">
-		<?php print Table::simple($header, $query, "class='table table-bordered'"); ?>
+		<?php print Html::link('user/create', 'Nuevo Usuario', "class='btn btn-primary btn-round'") ?>
+		<hr/>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-border">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Usuario</th>
+					<th>Rol</th>
+					<th>Eliminar</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach($query as $row): ?>
+				<tr>
+					<td><?php print $row->id ?></td>
+					<td><?php print Html::link('edit/'.$row->id, $row->user) ?></td>
+					<td><?php print $row->rol->rol ?></td>
+					<td><?php print Html::link('delete/'.$row->id, 'Eliminar') ?></td>
+				</tr>
+			<?php endforeach ?>
+			</tbody>
+		</table>
 	</div>
 </div>

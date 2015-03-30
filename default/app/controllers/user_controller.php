@@ -11,21 +11,31 @@ class UserController extends AdminController
 	{
 		$this->pageTitle = "Configuración de Usuarios";
 
-		$this->header = array(
-			'id' => array(
-				'title' => 'No'
-			),
-			'user' => array(
-				'title' => 'Usuario',
-				'url' => 'user/edit/',
-			),
-			'Delete' => array(
-				'title' => 'Delete',
-				'url' => 'user/del/',
-				'del' => 'delete'
-			)
-		);
-
 		$this->query = Load::model('user')->find();
+	}
+
+	public function create()
+	{
+		$this->pageTitle = "Crear nuevo usuario";
+		if(Input::hasPost('user')){
+			$user = Load::model('user');
+			if($user->save(Input::post('user'))){
+				Flash::valid('El usuario a sido creado');
+				Redirect::toAction('');
+			} else {
+				Flash::error('A ocurrido un error');
+				Redirect::toAction('');
+			}
+		}
+	}
+
+	public function edit($id)
+	{
+
+	}
+
+	public function delete($id)
+	{
+
 	}
 }
