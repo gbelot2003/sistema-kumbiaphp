@@ -19,8 +19,11 @@
 	<![endif]-->
 </head>
 <body>
-<?php View::content(); ?>
-
+	<div class="container">
+		<div class="row">
+			<?php View::content(); ?>
+		</div>
+	</div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <?php print Tag::js('sistema.gen') ?>
 </body>
