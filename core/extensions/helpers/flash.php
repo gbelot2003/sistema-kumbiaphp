@@ -43,7 +43,7 @@ class Flash
     public static function show($name, $text)
     {
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            echo '<div class="', $name, ' flash">', $text, '</div>', PHP_EOL;
+            echo '<div class="', $name, ' flash">', $text, '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>', PHP_EOL;
         } else {
             echo $name, ': ', strip_tags($text), PHP_EOL;
         }
@@ -56,7 +56,7 @@ class Flash
      */
     public static function error($text)
     {
-        return self::show('error', $text);
+        return self::show('alert alert-danger error', $text);
     }
 
     /**
@@ -66,7 +66,7 @@ class Flash
      */
     public static function warning($text)
     {
-        return self::show('warning', $text);
+        return self::show('alert alert-warning warning', $text);
     }
 
     /**
@@ -76,7 +76,7 @@ class Flash
      */
     public static function info($text)
     {
-        return self::show('info', $text);
+        return self::show('alert alert-info info', $text);
     }
 
     /**
@@ -86,7 +86,7 @@ class Flash
      */
     public static function valid($text)
     {
-        return self::show('valid', $text);
+        return self::show('alert alert-success valid', $text);
     }
 
     /**

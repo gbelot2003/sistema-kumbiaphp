@@ -7,8 +7,6 @@
 
 class IndexController extends AppController
 {
-
-
 	protected function before_filter()
 	{
 		$this->pageTitle = NULL;
