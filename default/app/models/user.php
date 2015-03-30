@@ -16,6 +16,11 @@ class User extends ActiveRecord
 		$this->password = sha1($this->password);
 	}
 
+	protected function before_update()
+	{
+		$this->password = sha1($this->password);
+	}
+
 	public $before_delete = "no_borrar_superadmin";
 
 	public function no_borrar_superadmin()

@@ -8,7 +8,7 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<?php print Form::open(); ?>
-				<?php View::partial('user/_form', NULL, array('submitButton' => "Editar")) ?>
+				<?php View::partial('user/_form', NULL, array('submitButton' => "Editar", 'user' => $user,  'showPass' => false)) ?>
 				<?php print Form::close() ?>
 			</div>
 		</div>

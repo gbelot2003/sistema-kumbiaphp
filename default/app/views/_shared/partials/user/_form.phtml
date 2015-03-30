@@ -2,7 +2,7 @@
 	<label for="user">Usuario</label>
 	<?php print Form::text('user.user', "class='form-control'") ?>
 </div>
-
+<?php if($showPass == true) : ?>
 <div class="form-group">
 	<label for="password">Password</label>
 	<?php print Form::pass('user.password', "class='form-control'") ?>
@@ -12,7 +12,11 @@
 	<label for="repassword">Password de nuevo</label>
 	<?php print Form::pass('user.repassword', "class='form-control'") ?>
 </div>
-
+<?php else : ?>
+	<div class="form-group">
+		<?php print Html::link('user/editpassword/'. $user->id, 'Cambiar Password', "class='btn btn-primary'"); ?>
+	</div>
+<?php endif; ?>
 <div class="form-group">
 	<label for="rol">Rol</label>
 	<?php print Form::dbSelect('user.rol_id', null, null, 'Roles', "class='form-control'") ?>
