@@ -7,16 +7,21 @@
  */
 class UserController extends AdminController
 {
+
+	public function before_filter()
+	{
+		$this->siteTitle = "Administración de Usuarios";
+		$this->pageTitle = $this->siteTitle;
+	}
+
 	public function index()
 	{
-		$this->pageTitle = "Configuración de Usuarios";
-
 		$this->query = Load::model('user')->find();
 	}
 
 	public function create()
 	{
-		$this->pageTitle = "Crear nuevo usuario";
+		$this->pageTitle = "Creacion de nuevo usuario";
 		if(Input::hasPost('user')){
 			$user = Load::model('user');
 			if($user->save(Input::post('user'))){

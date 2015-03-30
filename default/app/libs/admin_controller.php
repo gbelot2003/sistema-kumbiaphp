@@ -29,7 +29,7 @@ class AdminController extends Controller
 			Redirect::to('/');
 		}
 		$this->siteTitle = "Sistema";
-		$this->pageTitle = $this->siteTitle;
+		$this->pageTitle = NULL;
 
 		$this->navActive = array();
 
