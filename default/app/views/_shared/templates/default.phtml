@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-	<title><?php print $pageTitle ?></title>
+	<title><?php print $siteTitle ?></title>
 
 	<!-- Bootstrap -->
 	<?php Tag::css('sistema') ?>
@@ -22,6 +22,7 @@
 	<?php View::partial('sistema/navbar', FALSE, array('navActive' => $navActive, 'user' => $user)); ?>
 	<div class="container">
 		<div class="row">
+			<h2><?php print	$pageTitle ?></h2>
 			<?php View::content(); ?>
 		</div>
 	</div>

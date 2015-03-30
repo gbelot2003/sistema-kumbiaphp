@@ -43,11 +43,13 @@ class Table {
 				<tr class="trTable <?php print $i++ ?>">
 					<?php foreach($headers as $key => $value): ?>
 
-						<?php if(!isset($value['url'])): ?>
+						<?php if(!isset($value['url'])) : ?>
 
 							<td><span><?php print $query->$key ?></span></td>
 
-						<?php else: ?>
+						<?php elseif(isset($value['rel'])) : ?>
+							<td class="rel"><?php print $value['rel'] ?></td>
+						<?php else : ?>
 
 							<?php if(!isset($value['del'])): ?>
 								<td class="tdTable">
@@ -55,11 +57,9 @@ class Table {
 								</td>
 
 							<?php else: ?>
-
 								<td class="del">
 									<?php print html::link($value['url'].$query->id, $key, $value['attr']) ?>
 								</td>
-
 							<?php endif ?>
 
 						<?php endif ?>

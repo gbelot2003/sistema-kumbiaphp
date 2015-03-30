@@ -28,7 +28,8 @@ class AdminController extends Controller
 			Flash::warning('Area no autorizada');
 			Redirect::to('/');
 		}
-		$this->pageTitle = "Sistema";
+		$this->siteTitle = "Sistema";
+		$this->pageTitle = $this->siteTitle;
 
 		$this->navActive = array();
 

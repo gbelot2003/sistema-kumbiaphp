@@ -8,6 +8,12 @@
 class IndexController extends AppController
 {
 
+
+	protected function before_filter()
+	{
+		$this->pageTitle = NULL;
+	}
+
     public function index()
     {
 		$this->navActive['inicio'] = "active";
