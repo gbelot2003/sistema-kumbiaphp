@@ -53,10 +53,9 @@ class UserController extends AdminController
 		$this->pageTitle = "Editar usuario";
 		$this->user = Load::model('user')->find_by_id((int) $id);
 
-
 		if(Input::post('user'))
 		{
-			$user 			= Load::model('user');
+			$user 			= $this->user;
 			$usuario 		= Input::post('user');
 			$usuario['id']	= $user->id;
 
@@ -65,7 +64,7 @@ class UserController extends AdminController
 				Redirect::toAction('');
 			} else {
 				Flash::error('A ocurrido un error al editar');
-				Redirect::toAction('');
+				$this->user = Input::post('user');
 			}
 		}
 
