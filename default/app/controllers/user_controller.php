@@ -51,6 +51,11 @@ class UserController extends AdminController
 
 	public function delete($id)
 	{
+		$user = Load::model('user')->find_by_id((int) $id);
+		if($user->delete()){
+			
+			Redirect::toAction('');
+		}
 
 	}
 }
