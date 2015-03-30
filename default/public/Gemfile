@@ -1,0 +1,9 @@
+# A sample Gemfile
+source "https://rubygems.org"
+
+gem 'sass'
+gem 'sass-globbing', ">= 1.1.0"
+gem 'compass'
+gem 'breakpoint',  "2.0.5"
+gem 'singularitygs', "< 2.0.0"
+gem 'materialize-sass'
