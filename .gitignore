@@ -1,5 +1,5 @@
 vendor/*
-idea
+.idea
 default/public/bower_components
 default/public/node_modules
 default/public/.sass-cache
