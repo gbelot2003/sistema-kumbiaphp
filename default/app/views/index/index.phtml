@@ -1,17 +1,34 @@
-    <div class="hero">
-		<h1>KumbiaPHP está listo para usarse</h1>
-        <p><strong>Bienvenido a KumbiaPHP Framework</strong>. El framework ya está listo para desarrollar aplicaciones web con PHP, rápida y fácilmente
-       , sin tener que reinventar la rueda, y preocupandose por lo más importante, la lógica de su aplicación. <?php echo Html::link('pages/show/kumbia/status/', 'Ver Config', 'title="Ver configuración de la aplicación" class="btn btn-info"') ?></p>
-    </div>
-        <h2>Como empezar</h2>
-        <p>En nuestra <a href="http://wiki.kumbiaphp.com/">wiki</a> podrás encontrar información actualizada sobre el uso del framework,
-        si estas comenzando con <em>KumbiaPHP</em> deberías realizar  la
-        <strong><a href="http://wiki.kumbiaphp.com/Hola_Mundo_KumbiaPHP_Framework">Aplicación Hola Mundo</a></strong>
-        tambien puede interesarte saber sobre:</p>
-		<ul>
-			<li><a href="http://wiki.kumbiaphp.com/Beta2_CRUD_en_KumbiaPHP_Framework">Creacion de CRUD(Create, Read, Update, Delete)</a></h3></li>
-			<li><a href="http://wiki.kumbiaphp.com/Como_Usar_los_Modelos_en_KumbiaPHP">Uso de modelos</a></li>
-			<li><a href="http://wiki.kumbiaphp.com/KumbiaPHP_Framework_Versi%C3%B3n_1.0_Spirit#databases.ini">Configurar conexiones a bases de datos</a></li>
-		</ul>
-		<p>Estos son solo algunos ejemplos puedes ver más en la <a href="http://wiki.kumbiaphp.com/Categor%C3%ADa:Tutoriales_KumbiaPHP" title="Tutoriales KumbiaPHP">sección de tutoriales de la wiki</a></p>
-    </div>
+<div class="jumbotron">
+	<h1 class="text-center">Boilerplate de WebApps en Kumbiaphp</h1>
+	<h2>Configuración inical que incluye Sistema de navegación, Sass con Bootrap por defecto, bower, grunt para comprimir los archivos .js, Sistema de usuarios y permisos entro otros.</h2>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3>Distribució en github</h3>
+			</div>
+			<div class="panel-body">
+				<p>Puedes encontrar esta distribución en <?php print Html::link('https://github.com/gbelot2003/sistema-kumbiaphp', 'Github') ?>
+				Sirvete descargarla y modificarla a placer y si puedes y tienes tiempo, enviame los merge que consideres necesarios.</p>
+				<p>Tambien puedes encontrarlos en Bitbucket si asi lo prefieres en <?php print Html::link('', 'Bitbuket') ?></p>
+				<p>Quedo pendiente de subir un par de videotutoriales a youtube</p>
+				<p>"have a fun codding ;)"</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3>Utilíza rvm y nvm de preferencia</h3>
+			</div>
+			<div class="panel-body">
+				<p>Para evitar conflictos y quebraderos de cabeza con ruby y node, deberias usar rvm y nvm.</p>
+				<p>Con rvm puedes luego instalar el gem bundler y luego iniciar los archivos de sass</p>
+				<p>y con nvm, podras instalar los archivos del package.js y bower.js sin problemas de compatibilidad (utilizo node v0.10.33)</p>
+			</div>
+		</div>
+	</div>
+
+</div>
