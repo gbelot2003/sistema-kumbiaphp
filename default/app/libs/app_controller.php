@@ -20,9 +20,16 @@ class AppController extends Controller
     final protected function initialize()
     {
 		$this->pageTitle = "Sistema";
+
 		$this->navActive = array();
 
 		$this->navActive['login'] = NULL;
+
+		if(Auth::is_valid()){
+			$this->user = Auth::get('user');
+		} else {
+			$this->user = NULL;
+		}
     }
 
     final protected function finalize()

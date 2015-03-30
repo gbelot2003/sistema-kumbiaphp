@@ -17,26 +17,26 @@
 				<li class="<?php print $navActive['inicio'] ?>"><?php print Html::link('', 'inicio') ?></li>
 			</ul>
 
+			<?php if(!isset($user)){ ?>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="<?php print $navActive['login'] ?>">
-					<?php print Html::link('index/login', 'Login') ?>
+					<?php print Html::link('login', 'Login') ?>
 				</li>
 			</ul>
-			<!--
+
+			<?php } else { ?>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">Link</a></li>
+				<li><?php print html::link('', Auth::get('user')); ?></li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else here</a></li>
+						<li><?php print	Html::link('', 'Usuarios y roles'); ?></li>
 						<li class="divider"></li>
-						<li><a href="#">Separated link</a></li>
+						<li><?php print Html::link('logout', 'Logout') ?></li>
 					</ul>
 				</li>
 			</ul>
-			-->
+			<?php } ?>
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
 </nav>

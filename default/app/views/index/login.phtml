@@ -1,1 +1,32 @@
-<?php View::content() ?>
+<div class="row">
+	<div class="col-md-12">
+		<?php View::content() ?>
+	</div>
+</div>
+<div class="row">
+
+	<div class="col-md-8 col-md-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4>Login de Sistema</h4>
+			</div>
+			<div class="panel-body">
+				<?php echo Form::open('login'); ?>
+
+				<div class="form-group">
+					<?php echo Form::text("user", "class='form-control'"); ?>
+				</div>
+
+				<div class="form-group">
+					<?php echo Form::password("password", "class='form-control'"); ?>
+				</div>
+
+				<div class="form-group">
+					<?php echo Form::submit("Ingresar", "class='btn btn-primary'"); ?>
+				</div>
+
+				<?php echo Form::close(); ?>
+			</div>
+		</div>
+	</div>
+</div>
