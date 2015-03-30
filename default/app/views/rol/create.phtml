@@ -1,0 +1,26 @@
+<div class="row">
+
+	<div class="col-md-12">
+
+		<div class="col-md-12">
+			<?php View::content() ?>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<?php print Form::open(); ?>
+
+				<div class="form-group">
+					<label for="user">Rol</label>
+					<?php print Form::text('rol.rol', "class='form-control'") ?>
+				</div>
+
+				<div class="form-group">
+					<?php echo Form::submit('Crear Rol', "class='btn btn-primary'"); ?>
+				</div>
+
+				<?php print Form::close() ?>
+			</div>
+		</div>
+	</div>
+</div>

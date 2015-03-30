@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-md-12">
+		<?php print Html::link('rol/create', 'Nuevo rol administrativo', "class='btn btn-primary btn-round'") ?>
+		<hr/>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-border">
+			<thead>
+			<tr>
+				<th>No.</th>
+				<th>Rol</th>
+				<th>Eliminar</th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php foreach($rol as $row): ?>
+				<tr>
+					<td><?php print $row->id ?></td>
+					<td><?php print Html::link('rol/edit/'.$row->id, $row->rol) ?></td>
+					<td><?php print Html::link('rol/delete/'.$row->id, 'Eliminar') ?></td>
+				</tr>
+			<?php endforeach ?>
+			</tbody>
+		</table>
+	</div>
+</div>

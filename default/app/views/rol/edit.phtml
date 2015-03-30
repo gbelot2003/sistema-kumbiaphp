@@ -10,6 +10,15 @@
 			<div class="panel-body">
 				<?php print Form::open(); ?>
 
+				<div class="form-group">
+					<label for="user">Rol</label>
+					<?php print Form::text('rol.rol', "class='form-control'") ?>
+				</div>
+
+				<div class="form-group">
+					<?php echo Form::submit('Editar Rol', "class='btn btn-primary'"); ?>
+				</div>
+
 				<?php print Form::close() ?>
 			</div>
 		</div>
