@@ -20,6 +20,9 @@ class AppController extends Controller
     final protected function initialize()
     {
 		$this->pageTitle = "Sistema";
+		$this->navActive = array();
+
+		$this->navActive['login'] = NULL;
     }
 
     final protected function finalize()

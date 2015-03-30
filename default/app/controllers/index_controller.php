@@ -9,7 +9,12 @@ class IndexController extends AppController
 
     public function index()
     {
-        
+		$this->navActive['inicio'] = "active";
     }
+
+	public function login()
+	{
+		$this->navActive['login'] = "active";
+	}
 
 }

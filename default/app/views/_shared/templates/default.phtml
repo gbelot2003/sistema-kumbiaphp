@@ -19,6 +19,7 @@
 	<![endif]-->
 </head>
 <body>
+	<?php View::partial('sistema/navbar', FALSE, array('navActive' => $navActive)); ?>
 	<div class="container">
 		<div class="row">
 			<?php View::content(); ?>
