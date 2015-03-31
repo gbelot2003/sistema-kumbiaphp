@@ -55,7 +55,7 @@ class UserController extends AdminController
 
 		if(Input::post('user'))
 		{
-			$user 			= $this->user;
+			$user 			= Load::model('user')->find_by_id;
 			$usuario 		= Input::post('user');
 			$usuario['id']	= $user->id;
 
